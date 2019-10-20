@@ -3,6 +3,7 @@ package com.example.demo.service;
 
 import com.example.demo.entity.Vehicle;
 import com.example.demo.repository.VehicleRepository;
+import graphql.GraphQLException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,5 +39,18 @@ public class VehicleService {
     @Transactional(readOnly = true)
     public Optional<Vehicle> getVehicle(final int id) {
         return this.vehicleRepository.findById(id);
+    }
+
+    public Vehicle updateVehicle(final Integer id, Optional<String> type, Optional<String> modelCode, Optional<String> brandName, Optional<String> launchDate){
+        Optional<Vehicle> vehicleOptional = this.vehicleRepository.findById(id);
+        if(vehicleOptional.isPresent()){
+            Vehicle vehicle = vehicleOptional.get();
+            vehicle.setType(type.orElse(vehicle.getType()));
+            vehicle.setModelCode(modelCode.orElse(vehicle.getModelCode()));
+            vehicle.setBrandName(brandName.orElse(vehicle.getBrandName()));
+            vehicle.setLaunchDate(LocalDate.parse(launchDate.orElse(vehicle.getLaunchDate().toString())));
+            return this.vehicleRepository.save(vehicle);
+        }
+        throw new GraphQLException("Could not find Vehicle with ID: "+id);
     }
 }
