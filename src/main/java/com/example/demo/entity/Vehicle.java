@@ -1,27 +1,35 @@
 package com.example.demo.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
+@Table(name = "vehicles")
 public class Vehicle implements Serializable {
+    
     private static final long serialVersionUID = 1L;
+    
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
 
-    @Column(name = "ID", nullable = false)
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
-
+    @NotBlank(message = "Vehicle type is required")
     @Column(name = "type", nullable = false)
     private String type;
 
-    @Column(name = "model_code", nullable = false)
+    @NotBlank(message = "Model code is required")
+    @Column(name = "model_code", nullable = false, unique = true)
     private String modelCode;
 
     @Column(name = "brand_name")
@@ -30,10 +38,8 @@ public class Vehicle implements Serializable {
     @Column(name = "launch_date")
     private LocalDate launchDate;
 
-    private transient  String formattedDate;
-
-    // Getter and setter
+    @Transient
     public String getFormattedDate() {
-        return getLaunchDate().toString();
+        return launchDate != null ? launchDate.toString() : null;
     }
 }
