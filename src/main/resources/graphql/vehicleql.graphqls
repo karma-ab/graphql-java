@@ -1,15 +1,34 @@
 type Vehicle {
-    id: ID!,
-    type: String,
-    modelCode: String,
-    brandName: String,
+    id: ID!
+    type: String!
+    modelCode: String!
+    brandName: String
     launchDate: String
+    formattedDate: String
 }
+
 type Query {
-    vehicles(count: Int):[Vehicle]
-    vehicle(id: ID):Vehicle
+    vehicles(count: Int): [Vehicle!]!
+    vehicle(id: ID!): Vehicle
+    vehiclesByType(type: String!): [Vehicle!]!
+    vehiclesByBrand(brandName: String!): [Vehicle!]!
 }
+
 type Mutation {
-    createVehicle(type: String!, modelCode: String!, brandName: String, launchDate: String):Vehicle
-    updateVehicle(id:ID!,type: String, modelCode: String, brandName: String, launchDate: String ):Vehicle
+    createVehicle(
+        type: String!
+        modelCode: String!
+        brandName: String
+        launchDate: String
+    ): Vehicle!
+    
+    updateVehicle(
+        id: ID!
+        type: String
+        modelCode: String
+        brandName: String
+        launchDate: String
+    ): Vehicle!
+    
+    deleteVehicle(id: ID!): Boolean!
 }
